@@ -12,18 +12,17 @@ import {
 } from "./stats";
 
 
-
 var color = d3
   .scaleThreshold<number, string>()
-  .domain([0, 100, 500, 700, 1000, 1500, 2000])
+  .domain([5, 20, 50, 100, 500, 2000, 3000])
   .range([
-    "#e2d8e4",
-    "#c6b1c9",
-    "#aa8caf",
-    "#8e6995",
-    "#72467c",
-    "#72467c",
-    "#4c195a"
+    "#e3f3e7",
+    "#c6e7cf",
+    "#a9dbb8",
+    "#8ccfa1",
+    "#6dc38b",
+    "#49b675",
+    "#3f9561"
   ]);
 
 
@@ -33,7 +32,7 @@ var color = d3
   .append("svg")
   .attr("width", 1024)
   .attr("height", 800)
-  .attr("style", "background-color: #dfe0e0");
+  .attr("style", "background-color: #f4f4f4");
 
 
 const aProjection = d3Composite
@@ -78,7 +77,7 @@ const updateMap = (data: InfectedEntry[]) => {
     .scaleLinear()
     .domain([0, maxAffected])
     .clamp(true)
-    .range([5, 40]); // 50 pixel max radius, we could calculate it relative to width and height
+    .range([5, 40]);
   
   
   const calculateRadiusBasedOnAffectedCases = (comunidad: string) => {  
@@ -88,9 +87,9 @@ const updateMap = (data: InfectedEntry[]) => {
   
   };
 
-  const assignRegionBackgroundColor = (comunidad: string) => {
+  const assignRegionBackgroundColor = (name: string) => {
     const item = data.find(
-      item => item.name === comunidad
+      item => item.name === name
     );
   
     if (item) {
@@ -99,18 +98,19 @@ const updateMap = (data: InfectedEntry[]) => {
     return item ? color(item.value) : color(0);
   };
  
-  const drawmap = svg.selectAll("path");
 
-  drawmap
+  svg
+    .selectAll("path")
     .data(geojson["features"])
     .enter()
     .append("path")
     .attr("class", "country")
-    .style("fill", function(d: any) {
-      return assignRegionBackgroundColor(d.properties.NAME_1);
-    })
-    // data loaded from json file
-    .attr("d", geoPath as any);
+    .attr("fill", d => assignRegionBackgroundColor(d["properties"]["NAME_1"]))
+    .attr("d", geoPath as any)
+    .merge(svg.selectAll("path") as any)
+    .transition()
+    .duration(500)
+    .attr("fill", d => assignRegionBackgroundColor(d["properties"]["NAME_1"]));
 
 
   const circles = svg.selectAll("circle");

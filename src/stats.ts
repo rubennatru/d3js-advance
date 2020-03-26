@@ -109,7 +109,7 @@ export const current_stats: InfectedEntry[] = [
     value: 2078
   },
   {
-    name: "Pa√Ì Vasco",
+    name: "PaÌs Vasco",
     value: 2421
   },
   {

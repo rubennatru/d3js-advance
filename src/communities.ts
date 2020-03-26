@@ -15,7 +15,7 @@ export const latLongCommunities = [
     lat: 39.45975
   },
   {
-    name: "Murcia",
+    name: "Región de Murcia",
     long: -1.13004,
     lat: 37.98704
   },
